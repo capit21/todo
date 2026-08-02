@@ -3,483 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Para Stefany 💙</title>
+    <title>Para Ti</title>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@300;500;600&display=swap" rel="stylesheet">
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@800&display=swap" rel="stylesheet">
     
-    <style>
-        :root { 
-            /* --- PALETA AZUL --- */
-            --blue-light: #00f2fe; 
-            --blue-main: #4facfe; 
-            --blue-dark: #004e92; 
-            --blue-ice: #e0f7fa;  
-            --border: rgba(0, 242, 254, 0.2);
-        }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            /* Fondo con degradado azul muy oscuro */
-            background: radial-gradient(circle at center, #010a15 0%, #000000 100%); 
-            color: white;
-            font-family: 'Quicksand', sans-serif;
-            margin: 0; overflow: hidden; height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        /* --- SCROLLBAR PERSONALIZADO AZUL --- */
-        .carta-back::-webkit-scrollbar { width: 4px; }
-        .carta-back::-webkit-scrollbar-track { background: transparent; }
-        .carta-back::-webkit-scrollbar-thumb { background: var(--blue-main); border-radius: 10px; }
-
-        /* --- LOGIN --- */
-        #login-box {
-            background: rgba(0, 10, 25, 0.85); 
-            backdrop-filter: blur(25px); border: 1px solid var(--border);
-            padding: 40px; border-radius: 30px; text-align: center;
-            z-index: 100; width: 90%; max-width: 380px;
-            box-shadow: 0 25px 80px rgba(0, 78, 146, 0.4); 
-            transition: all 1s ease;
-        }
-        h2 { font-family: 'Playfair Display', serif; font-size: 2.2em; color: var(--blue-light); margin: 0; text-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
-        
-        input {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 242, 254, 0.3);
-            color: white; padding: 15px; border-radius: 15px; width: 100%;
-            text-align: center; font-size: 1.1em; margin: 25px 0; outline: none;
-            transition: 0.3s;
-        }
-        input:focus { border-color: var(--blue-light); background: rgba(0, 242, 254, 0.05); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
-
-        button#access-btn {
-            background: linear-gradient(45deg, var(--blue-light), var(--blue-main));
-            color: #001a33; border: none; padding: 15px;
-            font-weight: 700; border-radius: 15px; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px; width: 100%;
-            transition: 0.3s; box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4);
-        }
-        button#access-btn:hover { transform: scale(1.02); filter: brightness(1.2); box-shadow: 0 8px 25px rgba(0, 242, 254, 0.6); }
-
-        /* --- CONTENIDO --- */
-        #main-content { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; z-index: 50; overflow-y: auto; padding-bottom: 100px;
-        }
-        
-        #titulo-final {
-            text-align: center; padding: 60px 20px 20px;
-            font-family: 'Playfair Display', serif; font-size: 2.5em;
-            color: var(--blue-ice); opacity: 0; transition: 2s;
-            text-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
-        }
-
-        #progress-counter {
-            text-align: center; font-size: 0.8em; letter-spacing: 2px;
-            color: rgba(0, 242, 254, 0.6); margin-bottom: 20px; opacity: 0; transition: 2s;
-        }
-
-        #galeria-cartas {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 35px; padding: 0 25px; width: 100%; max-width: 1100px;
-            margin: 0 auto; opacity: 0; transform: translateY(40px); transition: 2s;
-        }
-
-        /* --- CARTAS --- */
-        .carta-container { height: 420px; perspective: 1200px; margin-bottom: 20px; }
-        .carta-inner {
-            position: relative; width: 100%; height: 100%;
-            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .carta-container.abierta .carta-inner { transform: rotateY(180deg); }
-
-        .carta-front, .carta-back {
-            position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden; border-radius: 25px;
-            display: flex; flex-direction: column; justify-content: center;
-            align-items: center; padding: 30px; border: 1px solid var(--border);
-        }
-
-        /* Efecto de pulso azul para cartas no abiertas */
-        @keyframes breathing {
-            0% { box-shadow: 0 0 0px rgba(0, 242, 254, 0); border-color: var(--border); }
-            50% { box-shadow: 0 0 20px rgba(0, 242, 254, 0.3); border-color: rgba(0, 242, 254, 0.6); }
-            100% { box-shadow: 0 0 0px rgba(0, 242, 254, 0); border-color: var(--border); }
-        }
-
-        .carta-front { 
-            background: linear-gradient(135deg, rgba(0, 78, 146, 0.15) 0%, rgba(0,0,0,0.4) 100%);
-            backdrop-filter: blur(15px); transition: 0.4s;
-            animation: breathing 3.5s infinite ease-in-out;
-        }
-        .carta-container.abierta .carta-front { animation: none; }
-
-        .carta-container:hover .carta-front { 
-            border-color: var(--blue-light); 
-            transform: translateY(-10px);
-            background: rgba(0, 242, 254, 0.08);
-        }
-
-        .carta-front span { font-size: 3.8em; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.4)); }
-        .carta-front p { font-size: 0.9em; font-weight: 600; letter-spacing: 3px; color: var(--blue-light); text-transform: uppercase; margin: 0; }
-
-        /* --- ESTÉTICA MEJORADA (AZUL) --- */
-        .carta-back {
-            background: linear-gradient(145deg, #ffffff 0%, #f0f8ff 100%);
-            color: #0b192c; 
-            transform: rotateY(180deg);
-            font-family: 'Quicksand', sans-serif; font-size: 0.95em; line-height: 1.6;
-            box-shadow: inset 0 0 30px rgba(0, 242, 254, 0.1), 0 20px 50px rgba(0,0,0,0.7); 
-            border: 2px solid rgba(0, 242, 254, 0.3);
-            padding: 35px; text-align: center;
-            justify-content: flex-start; overflow-y: auto; -webkit-overflow-scrolling: touch;
-            position: relative;
-        }
-
-        /* Corazón azul translúcido de fondo */
-        .carta-back::before {
-            content: '💙';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10em; opacity: 0.04;
-            pointer-events: none; z-index: 0;
-            filter: grayscale(100%) sepia(100%) hue-rotate(180deg) saturate(300%);
-        }
-
-        .carta-back > * { position: relative; z-index: 1; }
-
-        .carta-back strong { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 1.5em; 
-            font-weight: 700;
-            color: var(--blue-dark); 
-            display: block; margin-top: 5px; margin-bottom: 20px; 
-            text-shadow: 0 1px 2px rgba(0, 78, 146, 0.2);
-        }
-        
-        /* Línea azul decorativa debajo del título */
-        .carta-back strong::after {
-            content: ''; display: block; width: 60px; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--blue-main), transparent);
-            margin: 8px auto 0; border-radius: 2px;
-        }
-
-        /* --- MENSAJE FINAL Y BOTÓN --- */
-        #final-msg {
-            text-align: center; padding: 60px 25px; font-size: 1.5em;
-            font-family: 'Playfair Display', serif; color: var(--blue-ice);
-            opacity: 0; transition: 3s; letter-spacing: 1px;
-            text-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
-            max-width: 800px; margin: 0 auto;
-        }
-
-        .btn-siguiente {
-            display: inline-block; margin-top: 25px; font-size: 0.7em;
-            color: var(--blue-ice); border: 1px solid var(--blue-light);
-            background: rgba(0, 242, 254, 0.1);
-            padding: 12px 30px; border-radius: 30px; cursor: pointer;
-            font-family: 'Quicksand', sans-serif; font-weight: 600; text-transform: uppercase;
-            letter-spacing: 2px; transition: 0.3s;
-        }
-        .btn-siguiente:hover { 
-            background: var(--blue-main); color: #000; 
-            box-shadow: 0 0 20px var(--blue-main); 
-            transform: scale(1.05);
-        }
-
-        /* --- VISTA DEL CORAZÓN PIXELADO --- */
-        #heart-view {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; z-index: 60; flex-direction: column; 
-            justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 2s;
-            padding: 20px;
-        }
-
-        #pixel-heart-canvas { margin-bottom: 25px; }
-
-        /* Ajustes específicos para el texto largo del final */
-        #pixel-msg {
-            text-align: center; padding: 15px 25px; font-size: 1.6em;
-            font-family: 'Playfair Display', serif; color: var(--blue-ice);
-            opacity: 0; transition: 3s; letter-spacing: 1px;
-            text-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
-            max-width: 850px; line-height: 1.5;
-        }
-
-        /* --- MEDIA QUERIES PARA MÓVILES (Responsivo) --- */
-        @media (max-width: 768px) {
-            #pixel-msg {
-                font-size: 1.3em; /* Texto un poco más pequeño para celular */
-                padding: 10px 15px;
-                line-height: 1.4;
-            }
-            .carta-back { font-size: 0.9em; padding: 25px; }
-            h2 { font-size: 2em; }
-            #titulo-final { font-size: 2em; }
-        }
-
-        /* --- ELEMENTOS MÁGICOS DE FONDO --- */
-        .sparkle {
-            position: absolute; width: 5px; height: 5px; background: white;
-            border-radius: 50%; pointer-events: none; z-index: 999;
-            box-shadow: 0 0 10px white, 0 0 20px var(--blue-light);
-            animation: fall 1s linear forwards;
-        }
-        @keyframes fall { to { transform: translateY(60px) scale(0); opacity: 0; } }
-
-        .heart-float {
-            position: absolute; color: rgba(0, 242, 254, 0.4); pointer-events: none; 
-            animation: float-up 6s linear infinite; z-index: 10; text-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-        }
-        @keyframes float-up {
-            0% { transform: translateY(110vh) scale(0); opacity: 0; }
-            50% { opacity: 0.8; transform: scale(1.4); }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
-
-        #music-btn {
-            position: fixed; bottom: 25px; right: 25px;
-            background: rgba(0, 10, 25, 0.8); border: 1px solid var(--blue-main);
-            color: var(--blue-light); width: 50px; height: 50px; border-radius: 50%;
-            cursor: pointer; z-index: 1000; font-size: 1.3em; display: none;
-            transition: 0.3s; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
-        }
-        #music-btn:hover { transform: scale(1.1); background: var(--blue-main); color: white; box-shadow: 0 0 25px rgba(0, 242, 254, 0.5); }
-    </style>
+    <!-- Enlace a tu archivo CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <audio id="bg-music" loop>
+    <!-- Música de fondo oculta (se reproduce sola al iniciar sesión) -->
+    <audio id="bg-music" loop crossorigin="anonymous">
         <source src="cancion.mp3" type="audio/mpeg">
     </audio>
-    <button id="music-btn" onclick="toggleMusic()">🔊</button>
 
+    <!-- Login -->
     <div id="login-box">
-        <h2>Segura?</h2>
-        <input type="text" id="pass" placeholder="Código Secreto" spellcheck="false" autocomplete="off">
-        <button id="access-btn" onclick="checkPass()">Abrirme de patas para ti</button>
+        <h2></h2>
+        <input type="text" id="pass" placeholder="dd/mm" spellcheck="false" autocomplete="off">
+        <button class="glow-btn" onclick="checkPass()">Abrir</button>
         <p id="hint" style="font-size: 0.8em; margin-top: 20px; color: #ff4d4d;"></p>
     </div>
 
+    <!-- Contenido Principal -->
     <div id="main-content">
         <h1 id="titulo-final">Eres de lo mejor que me ha pasado y pasará</h1>
-        <div id="progress-counter">SORPRESAS DESCUBIERTAS: <span id="count">0</span>/6</div>
+        <div id="progress-counter">SORPRESAS DESCUBIERTAS: <span id="count">0</span> / 6</div>
         
         <div id="galeria-cartas">
-            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>😊</span><p>Tu Sonrisa</p></div><div class="carta-back"><strong>Felicidad</strong><span>Verte sonreír o escucharte reír me apendeja por completo. Lograr sacarte una sonrisa: que, por cierto, es de lo más bonito que he visto y verte así, feliz y alegre, me alegra la vida; es lo que más disfruto de estar contigo.</span></div></div></div>
-            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>🔊</span><p>Hablar Contigo</p></div><div class="carta-back"><strong>Diferente</strong><span>Tienes una voz preciosa, pero hablar contigo es otra cosa. Como ya te dije, conversar contigo es totalmente diferente a hacerlo con cualquier otra persona; el simple hecho de oír tu voz o leer un mensaje tuyo me saca una sonrisa y me alegra el día. Sé que tienes muchas cosas en la cabeza y, por eso, valoro muchísimo que te tomes el tiempo de leerme o responderme; no necesito nada más de ti porque con el simple hecho de saber que estás ahí, me haces feliz.</span></div></div></div>
-            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>✨</span><p>Tu Esencia</p></div><div class="carta-back"><strong>Distinta</strong><span>En el mundo existen muchas chicas lindas, pero tú no solo eres una de ellas; tienes ese 'algo' que hace que todo lo bonito en ti: tu actitud, tu cabello, tu sonrisa, tu voz o tus ojos; sean mucho más bellos de lo que ya son. Al principio pensé que eras una chica más, pero mientras más te conocía, más me daba cuenta de que eres una en un millón, y literalmente brilles entre todas.</span></div></div></div>
-            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>🤍</span><p>Tu Trato</p></div><div class="carta-back"><strong>Soportándome</strong><span>En serio no sé por qué eres así conmigo. Te portas increíble, me soportas cuando ni yo mismo me aguanto, y te quiero muchísimo... en todos los sentidos, cualquier persona estaría feliz de tenerte cerca y quien hablé mal de ti, no sabe lo que dice, es pura envida porque aparte de ser una increíble persona eres la chica más bonita que existe.</span></div></div></div>
-            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>👤</span><p>Tú</p></div><div class="carta-back"><strong>La Verdad</strong><span>Hay que ser muy tonta para decir que debes aprenderde a estar sola; todos queremos sentirnos queridos, es parte de nuestra naturaleza buscar a alguien. Sé que piensas que intentar algo con alguien ahorita por tu situación es una tontera; me lo dijiste hace tiempo y mira lo que pasó después... irónico, ¿no? No me estoy burlando de eso, ¿Qué chico quiere ver a la chica que quiere triste?<br><br>A lo que quiero llegar es que es evidente lo que yo siento por ti, creo que tú también lo sientes. Cuando te dije que tenía miedo no era a ser rechazado otra vez (JAJAJA), sino a que pase lo que pase, tú ya no estés. Porque sinceramente, si me rechazas, ¿qué sentido tendría seguir hablando? Y si me dices que sí, también me da miedo que todo salga mal y nos dejemos de hablar para siempre. <br><br>Prefiero arriesgarme y escribirte esto porque te quiero más de lo que imaginas. Esto no es un 'intentémoslo', porque sé que es lo que menos quieres ahora; solo quiero que me des una oportunidad para estar más cerca de ti, no ser un bobeo ni vacile, va a sonar tonto o cursi pero contigo no quiero una relacion típica o superficial, sino algo mas puro, sincero y sentimental/emocional: abrirme contigo, oir tus problemas y que tu escuches los mios. Quizá creas que no eres para mí, ni yo para ti, pero soy feliz contigo, no cambiaría nada de ti por eso es lo que hace que seas tú, eso es lo que me hace sentir lo que siento por ti. Va a sonar un poco ególatra, pero si no soy yo, ¿qué es lo que mereces tú? <br><br>Obviamente, no soy ni un poco de lo que mereces. Si después de esto decides alejarte, puedes hacerlo; solo espero que llegue alguien que vea en ti lo que yo veo: todos tus encantos y también tus defectos. Sí, defectos, porque esos detalles son los que nos hacen únicos y es precisamente por eso que alguien debe quererte con todo y ellos. Quería decirte todo esto en persona o por llamada, pero no estaba seguro de si querías escucharlo o no. Te quiero mucho.</span><div style="height: 40px;"></div></div></div></div>
-            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>🙏</span><p>Perdón</p></div><div class="carta-back"><strong>Lo siento</strong><span>Perdón por la llamada del otro día. Quizá para ti ya pasó, pero fui un tonto al cortarte de la nada y fue totalmente mi culpa. No debí llamarte sabiendo que necesitas descansar y yo estuve de tonto sin dejarte ir a dormir. <br><br>Eres de las pocas personas con las que realmente no quiero ser un imbécil y me porté de forma rara al hcer eso. Y para no estar echándonos la culpa individualmente, hagamos que sea de ambos; al fin y al cabo somos tú y yo, ¿va? Así no dividimos la culpa.</span><div style="height: 40px;"></div></div></div></div>
+            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>😊</span><p>Tu Sonrisa</p></div><div class="carta-back"><strong>Felicidad</strong>Verte sonreír o escucharte reír me apendeja por completo. Lograr sacarte una sonrisa: que, por cierto, es de lo más bonito que he visto y verte así, feliz y alegre, me alegra la vida; es lo que más disfruto de estar contigo.</div></div></div>
+            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>🔊</span><p>Hablar Contigo</p></div><div class="carta-back"><strong>Diferente</strong>Tienes una voz preciosa, pero hablar contigo es otra cosa. Como ya te dije, conversar contigo es totalmente diferente a hacerlo con cualquier otra persona; el simple hecho de oír tu voz o leer un mensaje tuyo me saca una sonrisa y me alegra el día. Sé que tienes muchas cosas en la cabeza y, por eso, valoro muchísimo que te tomes el tiempo de leerme o responderme; no necesito nada más de ti porque con el simple hecho de saber que estás ahí, me haces feliz.</div></div></div>
+            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>✨</span><p>Tu Esencia</p></div><div class="carta-back"><strong>Distinta</strong>En el mundo existen muchas chicas lindas, pero tú no solo eres una de ellas; tienes ese 'algo' que hace que todo lo bonito en ti: tu actitud, tu cabello, tu sonrisa, tu voz o tus ojos; sean mucho más bellos de lo que ya son. Al principio pensé que eras una chica más, pero mientras más te conocía, más me daba cuenta de que eres una en un millón, y literalmente brilles entre todas.</div></div></div>
+            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>🤍</span><p>Tu Trato</p></div><div class="carta-back"><strong>Soportándome</strong>En serio no sé por qué eres así conmigo. Te portas increíble, me soportas cuando ni yo mismo me aguanto, y te quiero muchísimo... en todos los sentidos, cualquier persona estaría feliz de tenerte cerca y quien hablé mal de ti, no sabe lo que dice, es pura envida porque aparte de ser una increíble persona eres la chica más bonita que existe.</div></div></div>
+            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>👤</span><p>Tú</p></div><div class="carta-back"><strong>La Verdad</strong>Hay que ser muy tonta para decir que debes aprender a estar sola; todos queremos sentirnos queridos, es parte de nuestra naturaleza buscar a alguien. Sé que piensas que intentar algo con alguien ahorita por tu situación es una tontera; me lo dijiste hace tiempo y mira lo que pasó después... irónico, ¿no? No me estoy burlando de eso, ¿Qué chico quiere ver a la chica que quiere triste?<br><br>A lo que quiero llegar es que es evidente lo que yo siento por ti, creo que tú también lo sientes. Cuando te dije que tenía miedo no era a ser rechazado otra vez, sino a que pase lo que pase, tú ya no estés. Porque sinceramente, si me rechazas, ¿qué sentido tendría seguir hablando? Y si me dices que sí, también me da miedo que todo salga mal y nos dejemos de hablar para siempre. <br><br>Prefiero arriesgarme y escribirte esto porque te quiero más de lo que imaginas. Esto no es un 'intentémoslo', porque sé que es lo que menos quieres ahora; solo quiero que me des una oportunidad para estar más cerca de ti, no ser un bobeo ni vacile, va a sonar tonto o cursi pero contigo no quiero una relacion típica o superficial, sino algo mas puro, sincero y sentimental: abrirme contigo, oir tus problemas y que tu escuches los mios. Quizá creas que no eres para mí, ni yo para ti, pero soy feliz contigo, no cambiaría nada de ti por eso es lo que hace que seas tú, eso es lo que me hace sentir lo que siento por ti. Va a sonar un poco ególatra, pero si no soy yo, ¿qué es lo que mereces tú? <br><br>Obviamente, no soy ni un poco de lo que mereces. Si después de esto decides alejarte, puedes hacerlo; solo espero que llegue alguien que vea en ti lo que yo veo: todos tus encantos y también tus defectos. Sí, defectos, porque esos detalles son los que nos hacen únicos y es precisamente por eso que alguien debe quererte con todo y ellos. Quería decirte todo esto en persona o por llamada, pero no estaba seguro de si querías escucharlo o no. Te quiero mucho.<div style="height:20px;"></div></div></div></div>
+            <div class="carta-container" onclick="openCard(this)"><div class="carta-inner"><div class="carta-front"><span>🙏</span><p>Perdón</p></div><div class="carta-back"><strong>Lo siento</strong> <br><br></div></div></div>
         </div>
 
         <div id="final-msg">
-            No hace falta decir que todo esta hecho con cariño, hasta la canción está por algo... me hace pensar en ti y el cómo me haces sentir. 💙<br>
-            <span class="btn-siguiente" onclick="transitionToHeart()">Hay algo más... Clic aquí</span>
+            <p>No hace falta decir que todo esta hecho con cariño, ojalà sea de tu agrado.</p>
+            <button class="glow-btn" onclick="transitionToHeart()" style="width: auto;">Hay algo más...</button>
         </div>
     </div>
 
+    <!-- CORAZÓN PIXEL -->
     <div id="heart-view">
         <canvas id="pixel-heart-canvas"></canvas>
         <div id="pixel-msg">
-            No me quiero quedar con las ganas de que sepas esto: Tú sabes cómo soy, introvertido, tímido y de pocas palabras... pero el momento en el que entendí que de verdad me gustabas fue cuando tus abrazos dejaron de ser incómodos para mí, cuando el tiempo volaba a tu lado, ya fuera en persona o por llamada, cuando no quiero guardarme mis problemas para mí solo y quiero contarte todo, y sobre todo, cuando dejaste de ser solo una cara bonita para convertirte en algo mucho más profundo. Fue ahí cuando me enamoré de tu actitud, de tu corazón y hasta de tus defectos.
+            Hola. No sé qué va a pasar después de este día; eso es lo bueno de la vida, creo. Como te dije, sé que te va a ir bien, y si llega algún momento malo, sigue adelante. Lo malo tampoco va a ser para siempre. Van a llegar los momentos buenos y siempre van a sobreponerse a los malos. Cuídate mucho, no quiero que te pase nada malo.
         </div>
+        <!-- Botón a las Flores Rojas -->
+        <button id="btn-to-flowers" class="glow-btn btn-flores" style="opacity: 0; transition: opacity 2s ease; width: auto; margin-top: 30px;" onclick="transitionToFlowers()">Pero espera... falta un detalle ❤️</button>
     </div>
 
-    <div id="canvas-container" style="position:fixed; top:0; left:0; z-index:1; pointer-events:none;"></div>
-
-    <script>
-        const KEY = "c3RlZmFueV9hbW9yX2V0ZXJub18yMDI2";
-        let cardsOpened = 0;
-        let openedSet = new Set();
-
-        function createSparkle(x, y) {
-            const s = document.createElement('div');
-            s.classList.add('sparkle');
-            s.style.left = x + 'px'; s.style.top = y + 'px';
-            document.body.appendChild(s);
-            setTimeout(() => s.remove(), 900);
-        }
-
-        document.addEventListener('mousemove', (e) => createSparkle(e.pageX, e.pageY));
-        document.addEventListener('touchstart', (e) => createSparkle(e.touches[0].pageX, e.touches[0].pageY));
-
-        function checkPass() {
-            if(document.getElementById('pass').value.trim() === KEY) {
-                document.getElementById('login-box').style.opacity = '0';
-                
-                const bgMusic = document.getElementById('bg-music');
-                bgMusic.volume = 0.05; // Ajusta el volumen aquí
-                bgMusic.play().catch(error => console.log("Autoplay bloqueado."));
-                
-                setTimeout(start, 1000);
-            } else {
-                document.getElementById('hint').innerText = "Llave incorrecta.";
-            }
-        }
-
-        function start() {
-            document.getElementById('login-box').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            document.getElementById('music-btn').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('titulo-final').style.opacity = '1';
-                document.getElementById('progress-counter').style.opacity = '1';
-                document.getElementById('galeria-cartas').style.opacity = '1';
-                document.getElementById('galeria-cartas').style.transform = 'translateY(0)';
-            }, 500);
-            initThree();
-            setInterval(spawnHeart, 700);
-        }
-
-        function spawnHeart() {
-            const h = document.createElement('div');
-            h.innerHTML = '💙'; h.classList.add('heart-float');
-            h.style.left = Math.random() * 90 + 5 + 'vw';
-            h.style.fontSize = Math.random() * 15 + 15 + 'px';
-            document.body.appendChild(h);
-            setTimeout(() => h.remove(), 6000);
-        }
-
-        function openCard(el) {
-            if(!el.classList.contains('abierta')) {
-                el.classList.add('abierta');
-                if (!openedSet.has(el)) {
-                    openedSet.add(el);
-                    cardsOpened++;
-                    document.getElementById('count').innerText = cardsOpened;
-                }
-                
-                if(cardsOpened === 6) {
-                    document.getElementById('final-msg').style.opacity = '1';
-                    document.getElementById('final-msg').style.transform = 'translateY(-20px)';
-                }
-            }
-        }
-
-        function toggleMusic() {
-            const a = document.getElementById('bg-music');
-            const btn = document.getElementById('music-btn');
-            if (a.paused) { a.play(); btn.innerHTML = "🔊"; } 
-            else { a.pause(); btn.innerHTML = "🔇"; }
-        }
-
-        // --- LÓGICA DE TRANSICIÓN AL CORAZÓN PIXELADO ---
-        function transitionToHeart() {
-            // Desvanece la vista actual
-            document.getElementById('main-content').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('main-content').style.display = 'none';
-                
-                // Muestra la vista del corazón
-                const heartView = document.getElementById('heart-view');
-                heartView.style.display = 'flex';
-                
-                setTimeout(() => {
-                    heartView.style.opacity = '1';
-                    drawPixelHeart();
-                }, 100);
-            }, 1500);
-        }
-
-        // --- DIBUJADO DEL CORAZÓN PIXEL POR PIXEL ---
-        function drawPixelHeart() {
-            const canvas = document.getElementById('pixel-heart-canvas');
-            const ctx = canvas.getContext('2d');
+    <!-- FLORES ROJAS CSS ANIMADAS -->
+    <div id="flower-view" class="paused">
+        <div class="night"></div>
+        <div class="flowers">
+            <div class="flower flower--1">
+                <div class="flower__leafs flower__leafs--1">
+                    <div class="flower__leaf flower__leaf--1"></div>
+                    <div class="flower__leaf flower__leaf--2"></div>
+                    <div class="flower__leaf flower__leaf--3"></div>
+                    <div class="flower__leaf flower__leaf--4"></div>
+                    <div class="flower__white-circle"></div>
+                    <div class="flower__light flower__light--1"></div>
+                    <div class="flower__light flower__light--2"></div>
+                    <div class="flower__light flower__light--3"></div>
+                    <div class="flower__light flower__light--4"></div>
+                    <div class="flower__light flower__light--5"></div>
+                    <div class="flower__light flower__light--6"></div>
+                    <div class="flower__light flower__light--7"></div>
+                    <div class="flower__light flower__light--8"></div>
+                </div>
+                <div class="flower__line">
+                    <div class="flower__line__leaf flower__line__leaf--1"></div>
+                    <div class="flower__line__leaf flower__line__leaf--2"></div>
+                    <div class="flower__line__leaf flower__line__leaf--3"></div>
+                    <div class="flower__line__leaf flower__line__leaf--4"></div>
+                    <div class="flower__line__leaf flower__line__leaf--5"></div>
+                    <div class="flower__line__leaf flower__line__leaf--6"></div>
+                </div>
+            </div>
+          
+            <div class="flower flower--2">
+                <div class="flower__leafs flower__leafs--2">
+                    <div class="flower__leaf flower__leaf--1"></div>
+                    <div class="flower__leaf flower__leaf--2"></div>
+                    <div class="flower__leaf flower__leaf--3"></div>
+                    <div class="flower__leaf flower__leaf--4"></div>
+                    <div class="flower__white-circle"></div>
+                    <div class="flower__light flower__light--1"></div>
+                    <div class="flower__light flower__light--2"></div>
+                    <div class="flower__light flower__light--3"></div>
+                    <div class="flower__light flower__light--4"></div>
+                    <div class="flower__light flower__light--5"></div>
+                    <div class="flower__light flower__light--6"></div>
+                    <div class="flower__light flower__light--7"></div>
+                    <div class="flower__light flower__light--8"></div>
+                </div>
+                <div class="flower__line">
+                    <div class="flower__line__leaf flower__line__leaf--1"></div>
+                    <div class="flower__line__leaf flower__line__leaf--2"></div>
+                    <div class="flower__line__leaf flower__line__leaf--3"></div>
+                    <div class="flower__line__leaf flower__line__leaf--4"></div>
+                </div>
+            </div>
+          
+            <div class="flower flower--3">
+                <div class="flower__leafs flower__leafs--3">
+                    <div class="flower__leaf flower__leaf--1"></div>
+                    <div class="flower__leaf flower__leaf--2"></div>
+                    <div class="flower__leaf flower__leaf--3"></div>
+                    <div class="flower__leaf flower__leaf--4"></div>
+                    <div class="flower__white-circle"></div>
+                    <div class="flower__light flower__light--1"></div>
+                    <div class="flower__light flower__light--2"></div>
+                    <div class="flower__light flower__light--3"></div>
+                    <div class="flower__light flower__light--4"></div>
+                    <div class="flower__light flower__light--5"></div>
+                    <div class="flower__light flower__light--6"></div>
+                    <div class="flower__light flower__light--7"></div>
+                    <div class="flower__light flower__light--8"></div>
+                </div>
+                <div class="flower__line">
+                    <div class="flower__line__leaf flower__line__leaf--1"></div>
+                    <div class="flower__line__leaf flower__line__leaf--2"></div>
+                    <div class="flower__line__leaf flower__line__leaf--3"></div>
+                    <div class="flower__line__leaf flower__line__leaf--4"></div>
+                </div>
+            </div>
+          
+            <div class="grow-ans" style="--d:1.2s">
+                <div class="flower__g-long">
+                    <div class="flower__g-long__top"></div>
+                    <div class="flower__g-long__bottom"></div>
+                </div>
+            </div>
+          
+            <div class="growing-grass">
+                <div class="flower__grass flower__grass--1">
+                    <div class="flower__grass--top"></div>
+                    <div class="flower__grass--bottom"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--1"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--2"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--3"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--4"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--5"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--6"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--7"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--8"></div>
+                    <div class="flower__grass__overlay"></div>
+                </div>
+            </div>
+          
+            <div class="growing-grass">
+                <div class="flower__grass flower__grass--2">
+                    <div class="flower__grass--top"></div>
+                    <div class="flower__grass--bottom"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--1"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--2"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--3"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--4"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--5"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--6"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--7"></div>
+                    <div class="flower__grass__leaf flower__grass__leaf--8"></div>
+                    <div class="flower__grass__overlay"></div>
+                </div>
+            </div>
+          
+            <div class="grow-ans" style="--d:2.4s">
+                <div class="flower__g-right flower__g-right--1">
+                    <div class="leaf"></div>
+                </div>
+            </div>
+          
+            <div class="grow-ans" style="--d:2.8s">
+                <div class="flower__g-right flower__g-right--2">
+                    <div class="leaf"></div>
+                </div>
+            </div>
+          
+            <div class="grow-ans" style="--d:2.8s">
+                <div class="flower__g-front">
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--1"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--2"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--3"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--4"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--5"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--6"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--7"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--8"><div class="flower__g-front__leaf"></div></div>
+                    <div class="flower__g-front__line"></div>
+                </div>
+            </div>
+          
+            <div class="grow-ans" style="--d:3.2s">
+                <div class="flower__g-fr">
+                    <div class="leaf"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--1"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--2"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--3"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--4"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--5"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--6"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--7"></div>
+                    <div class="flower__g-fr__leaf flower__g-fr__leaf--8"></div>
+                </div>
+            </div>
+          
+            <div class="long-g long-g--0">
+                <div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:2.2s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:3.4s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+            </div>
+          
+            <div class="long-g long-g--1">
+                <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:3.8s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:4s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--3"></div></div>
+            </div>
+          
+            <div class="long-g long-g--2">
+                <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--3"></div></div>
+            </div>
+          
+            <div class="long-g long-g--3">
+                <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+            </div>
+          
+            <div class="long-g long-g--4">
+                <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+            </div>
+          
+            <div class="long-g long-g--5">
+                <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+            </div>
+          
+            <div class="long-g long-g--6">
+                <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:4.8s"><div class="leaf leaf--3"></div></div>
+            </div>
+          
+            <div class="long-g long-g--7">
+                <div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div>
+                <div class="grow-ans" style="--d:3.2s"><div class="leaf leaf--1"></div></div>
+                <div class="grow-ans" style="--d:3.5s"><div class="leaf leaf--2"></div></div>
+                <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+            </div>
+        </div>
+      <div class="message-container">
+            <div class="message">No es nada pero igual</div>
             
-            // Mapa del corazón pixelado (O = pintar pixel)
-            const heartMap = [
-                "  OOOOO   OOOOO  ",
-                " OOOOOOO OOOOOOO ",
-                "OOOOOOOOOOOOOOOOO",
-                "OOOOOOOOOOOOOOOOO",
-                "OOOOOOOOOOOOOOOOO",
-                " OOOOOOOOOOOOOOO ",
-                "  OOOOOOOOOOOOO  ",
-                "   OOOOOOOOOOO   ",
-                "    OOOOOOOOO    ",
-                "     OOOOOOO     ",
-                "      OOOOO      ",
-                "       OOO       ",
-                "        O        "
-            ];
+            <div id="whatsapp-container">
+                <textarea id="wp-msg" placeholder="¿Qué te pareció? Escríbeme algo lindo..."></textarea>
+                <button class="glow-btn btn-wp" onclick="sendWhatsApp()">Enviar por WhatsApp 💬</button>
+            </div>
+        </div>
 
-            // Escala para móviles vs PC
-            const pixelSize = window.innerWidth < 768 ? 16 : 22; 
-            canvas.width = heartMap[0].length * pixelSize;
-            canvas.height = heartMap.length * pixelSize;
+    </div>
 
-            const pixels = [];
-            for (let y = 0; y < heartMap.length; y++) {
-                for (let x = 0; x < heartMap[y].length; x++) {
-                    if (heartMap[y][x] === 'O') {
-                        pixels.push({ x: x * pixelSize, y: y * pixelSize });
-                    }
-                }
-            }
-
-            // Desordenar los pixeles para que se arme aleatoriamente
-            for (let i = pixels.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [pixels[i], pixels[j]] = [pixels[j], pixels[i]];
-            }
-
-            let index = 0;
-            function drawNextPixel() {
-                if (index < pixels.length) {
-                    const p = pixels[index];
-                    
-                    // Estilo del pixel (Azul Brillante)
-                    ctx.fillStyle = '#00f2fe';
-                    ctx.shadowColor = '#4facfe';
-                    ctx.shadowBlur = 10;
-                    ctx.fillRect(p.x, p.y, pixelSize - 1, pixelSize - 1); // Dejamos 1px de espacio
-                    
-                    index++;
-                    // Usamos requestAnimationFrame para que la animación sea fluida
-                    requestAnimationFrame(drawNextPixel);
-                } else {
-                    // Termina de dibujar, aparece el mensaje
-                    setTimeout(() => {
-                        document.getElementById('pixel-msg').style.opacity = '1';
-                    }, 800);
-                }
-            }
-            drawNextPixel();
-        }
-
-        // --- FONDO 3D DE ESTRELLAS ---
-        function initThree() {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-            const geo = new THREE.BufferGeometry();
-            const count = window.innerWidth < 768 ? 4000 : 9000;
-            const pos = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i++) pos[i] = (Math.random()-0.5) * 200;
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            
-            const mat = new THREE.PointsMaterial({ size: 0.18, color: 0xe0f7fa, transparent: true, opacity: 0.5 });
-            const points = new THREE.Points(geo, mat);
-            scene.add(points);
-            camera.position.z = 100;
-
-            function anim() {
-                requestAnimationFrame(anim);
-                points.rotation.y += 0.0006;
-                renderer.render(scene, camera);
-            }
-            anim();
-        }
-    </script>
+    <!-- Enlace a tu archivo JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
